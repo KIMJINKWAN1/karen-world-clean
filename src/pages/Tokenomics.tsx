@@ -25,7 +25,7 @@ const Tokenomics = () => {
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <img
-            src="/assets/tokenomics.png"
+            src="/assets/Tokenomics.png"
             alt="Karen Tokenomics Chart"
             className="w-full max-w-md mx-auto rounded-2xl shadow-2xl hover:scale-105 transition duration-300"
           />
