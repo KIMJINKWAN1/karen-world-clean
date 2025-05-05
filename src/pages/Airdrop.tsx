@@ -15,7 +15,15 @@ const Airdrop = () => {
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/status`)
       .then((res) => res.json())
-      .then(setAirdropStatus)
+      .then((data) => {
+        // 구조 변환
+        setAirdropStatus({
+          totalClaimed: data.claimed,
+          remaining: data.remaining,
+          max: data.total,
+          percent: data.percent,
+        });
+      })
       .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
   }, []);
 
