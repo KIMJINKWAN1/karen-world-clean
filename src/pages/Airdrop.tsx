@@ -13,7 +13,7 @@ const Airdrop = () => {
   const [airdropStatus, setAirdropStatus] = useState({ totalClaimed: 0, remaining: 0, max: 0, percent: 0 });
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/airdrop/status`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/status`)
       .then((res) => res.json())
       .then(setAirdropStatus)
       .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
@@ -35,42 +35,41 @@ const Airdrop = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!/^0x[a-fA-F0-9]{40,64}$/.test(address)) {
-      toast.error("Please enter a valid wallet address!");
+  if (!/^0x[a-fA-F0-9]{40,64}$/.test(address)) {
+    toast.error("Please enter a valid wallet address!");
+    return;
+  }
+
+  if (!shared) {
+    toast.error("Please share on Twitter before claiming!");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      toast.error(data.error || "Something went wrong");
       return;
     }
 
-    if (!shared) {
-      toast.error("Please share on Twitter before claiming!");
-      return;
-    }
+    toast.success("🎉 Airdrop request submitted!");
+    setAddress("");
+    setShared(false);
 
-    const alreadyExists = await checkIfSubmittedOnSlack(address);
-    if (alreadyExists) {
-      toast.error("This wallet has already claimed the airdrop!");
-      return;
-    }
-
-    try {
-      await fetch(SLACK_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: `📥 New airdrop request: ${address}` }),
-      });
-
-      toast.success("🎉 Airdrop request submitted!");
-      setAddress("");
-      setShared(false);
-
-      // fetch updated status after claim
-      const updated = await fetch("/airdrop/status").then((res) => res.json());
-      setAirdropStatus(updated);
-    } catch (err) {
-      toast.error("Something went wrong. Please try again.");
-    }
-  };
+    const updated = await fetch(`${process.env.REACT_APP_API_URL}/api/status`).then((res) => res.json());
+    setAirdropStatus(updated);
+  } catch (err) {
+    toast.error("Something went wrong. Please try again.");
+  }
+};
 
   const handleTweet = () => {
     const tweetText = encodeURIComponent(
@@ -105,21 +104,26 @@ const Airdrop = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="0x... (Your Sui Wallet Address)"
-            className="w-full p-4 rounded-xl bg-white/10 border border-pink-400 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-          />
-          <button
-            type="submit"
-            disabled={!shared}
-            className={`w-full text-white text-lg py-3 rounded-xl transition-all ${shared ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-900 cursor-not-allowed"}`}
-          >
-            🎁 Submit
-          </button>
-        </form>
+  {!shared && (
+    <p className="text-sm text-red-400 text-center">
+      🐦 Please share the tweet first to unlock airdrop submission 💬
+    </p>
+  )}
+  <input
+    type="text"
+    value={address}
+    onChange={(e) => setAddress(e.target.value)}
+    placeholder="0x... (Your Sui Wallet Address)"
+    className="w-full p-4 rounded-xl bg-white/10 border border-pink-400 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+  />
+  <button
+    type="submit"
+    disabled={!shared}
+    className={`w-full text-white text-lg py-3 rounded-xl transition-all ${shared ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-900 cursor-not-allowed"}`}
+  >
+    🎁 Submit
+  </button>
+</form>
 
         <button
           onClick={handleTweet}

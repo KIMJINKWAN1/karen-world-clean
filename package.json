@@ -34,7 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "backend": "node server/index.js"
+    "backend": "node api/index.js"
   },
   "eslintConfig": {
     "extends": [
@@ -56,12 +56,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KIMJINKWAN1/karen-world.git"
+    "url": "git+https://github.com/KIMJINKWAN1/karen-world-clean"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KIMJINKWAN1/karen-world/issues"
+    "url": "https://github.com/KIMJINKWAN1/karen-world-clean/issues"
   }
 }
