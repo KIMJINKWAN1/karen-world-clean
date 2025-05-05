@@ -13,7 +13,7 @@ const Airdrop = () => {
   const [airdropStatus, setAirdropStatus] = useState({ totalClaimed: 0, remaining: 0, max: 0, percent: 0 });
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/status`)
+    fetch("https://karenworldbackend1.vercel.app/api/status")
       .then((res) => res.json())
       .then((data) => {
         // 구조 변환
@@ -56,7 +56,7 @@ const Airdrop = () => {
   }
 
   try {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
+    const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address }),
@@ -72,7 +72,7 @@ const Airdrop = () => {
     setAddress("");
     setShared(false);
 
-    const updated = await fetch(`${process.env.REACT_APP_API_URL}/api/status`).then((res) => res.json());
+    const updated = await fetch("https://karenworldbackend1.vercel.app/api/status").then((res) => res.json());
     setAirdropStatus(updated);
   } catch (err) {
     toast.error("Something went wrong. Please try again.");
