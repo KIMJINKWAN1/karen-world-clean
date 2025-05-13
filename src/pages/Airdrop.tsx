@@ -11,35 +11,33 @@ export default function Airdrop() {
     percent: "0.00",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("✅ Submit triggered");
-    setLoading(true);
-    setStatusMessage("");
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  console.log("✅ Submit triggered");
+  setLoading(true);
+  setStatusMessage("");
 
-    try {
-      const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ wallet }),
-      });
+  try {
+    const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ wallet }), // ← 여기가 핵심!
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Submission failed");
 
-      if (res.ok) {
-        setStatusMessage(`✅ Airdrop completed! ${data.amount} $KAREN sent.`);
-      } else {
-        setStatusMessage(`❌ ${data.error || "An error occurred."}`);
-      }
-    } catch (err) {
-      console.error("❌ Failed to submit wallet", err);
-      setStatusMessage("⚠️ Server error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
+    console.log("✅ Success:", data);
+  } catch (err: any) {
+    console.error("❌ Submit error", err);
+    setStatusMessage(`❌ ${err.message}`);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetch("https://karenworldbackend1.vercel.app/api/status")
