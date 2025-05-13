@@ -11,31 +11,32 @@ export default function Airdrop() {
     percent: "0.00",
   });
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  setStatusMessage("");
-  console.log("✅ Submit Triggered!", wallet);  // ← 로그 찍기
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("✅ Submit Triggered!", wallet);
+    setLoading(true);
+    setStatusMessage("");
 
-  try {
-    const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ wallet }),
-    });
+    try {
+      const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ wallet }),
+      });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Submit failed");
-    setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
-  } catch (err: any) {
-    console.error("❌ Submit error", err);
-    setStatusMessage(`❌ ${err.message}`);
-  } finally {
-    setLoading(false);
-  }
-};
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Submit failed");
+
+      setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
+    } catch (err: any) {
+      console.error("❌ Submit error", err);
+      setStatusMessage(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetch("https://karenworldbackend1.vercel.app/api/status")
@@ -53,7 +54,10 @@ const handleSubmit = async (e: React.FormEvent) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-cover bg-center flex items-center justify-center px-4" style={{ backgroundImage: "url('/assets/villain5.png')" }}>
+    <div
+      className="min-h-screen bg-cover bg-center flex items-center justify-center px-4"
+      style={{ backgroundImage: "url('/assets/villain5.png')" }}
+    >
       <div className="bg-black bg-opacity-80 rounded-2xl p-6 w-full max-w-md text-white shadow-xl">
         <h1 className="text-3xl font-extrabold text-center mb-4">🎁 Claim Your Airdrop</h1>
 
@@ -83,9 +87,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             type="submit"
             disabled={loading}
             className={`w-full py-2 rounded-lg font-bold transition ${
-              loading
-                ? "bg-gray-500 cursor-not-allowed"
-                : "bg-pink-600 hover:bg-pink-700"
+              loading ? "bg-gray-500 cursor-not-allowed" : "bg-pink-600 hover:bg-pink-700"
             }`}
           >
             {loading ? "Submitting..." : "🚀 Submit for Airdrop"}
