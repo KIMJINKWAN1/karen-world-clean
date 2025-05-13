@@ -61,7 +61,7 @@ export default function Airdrop() {
 
       {/* ✅ Twitter notice */}
       <p className="text-sm text-center text-gray-600 mb-4">
-        📢 Please share the airdrop on Twitter before submitting!
+        📢 To be eligible, share this airdrop on Twitter before submitting!
         <br />
         <a
           href="https://twitter.com/intent/tweet?text=I%20just%20joined%20the%20%24KAREN%20airdrop!%20%F0%9F%92%8E%20https%3A%2F%2Fkaren-world-clean.vercel.app"
@@ -69,7 +69,7 @@ export default function Airdrop() {
           rel="noopener noreferrer"
           className="text-blue-600 underline"
         >
-          Tweet Now
+          👉 Click here to tweet now
         </a>
       </p>
 
@@ -87,7 +87,7 @@ export default function Airdrop() {
           className="w-full bg-pink-500 text-white font-bold py-2 rounded"
           disabled={loading}
         >
-          {loading ? "Submitting..." : "✅ Submit for Airdrop"}
+          {loading ? "Submitting..." : "🎁 Submit for Airdrop"}
         </button>
       </form>
 
