@@ -13,6 +13,7 @@ export default function Airdrop() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("✅ Submit triggered");
     setLoading(true);
     setStatusMessage("");
 
@@ -61,7 +62,7 @@ export default function Airdrop() {
 
       {/* ✅ Twitter notice */}
       <p className="text-sm text-center text-gray-600 mb-4">
-        📢 To be eligible, share this airdrop on Twitter before submitting!
+        📢 Please share the airdrop on Twitter before submitting!
         <br />
         <a
           href="https://twitter.com/intent/tweet?text=I%20just%20joined%20the%20%24KAREN%20airdrop!%20%F0%9F%92%8E%20https%3A%2F%2Fkaren-world-clean.vercel.app"
@@ -69,27 +70,27 @@ export default function Airdrop() {
           rel="noopener noreferrer"
           className="text-blue-600 underline"
         >
-          👉 Click here to tweet now
+          Tweet Now
         </a>
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Enter your wallet address"
-          value={wallet}
-          onChange={(e) => setWallet(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full bg-pink-500 text-white font-bold py-2 rounded"
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "🎁 Submit for Airdrop"}
-        </button>
-      </form>
+  <input
+    type="text"
+    placeholder="Enter your Sui wallet address"
+    value={wallet}
+    onChange={(e) => setWallet(e.target.value)}
+    required
+    className="..."
+  />
+  <button
+    type="submit"
+    disabled={loading}
+    className="..."
+  >
+    🎁 Submit
+  </button>
+</form>
 
       {statusMessage && (
         <p className="mt-4 text-center text-sm text-red-600">{statusMessage}</p>
