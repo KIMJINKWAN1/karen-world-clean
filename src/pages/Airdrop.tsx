@@ -57,50 +57,54 @@ export default function Airdrop() {
   }, []);
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">🚀 $KAREN Airdrop</h1>
+    <div className="min-h-screen bg-cover bg-center flex items-center justify-center px-4" style={{ backgroundImage: "url('/assets/villain5.png')" }}>
+      <div className="bg-black bg-opacity-80 rounded-2xl p-6 w-full max-w-md text-white shadow-xl">
+        <h1 className="text-3xl font-extrabold text-center mb-4">🎁 Claim Your Airdrop</h1>
 
-      {/* ✅ Twitter notice */}
-      <p className="text-sm text-center text-gray-600 mb-4">
-        📢 Please share the airdrop on Twitter before submitting!
-        <br />
+        <p className="text-center text-sm mb-4">
+          🔔 <strong>Please share the airdrop on Twitter before submitting your wallet address!</strong>
+        </p>
+
         <a
           href="https://twitter.com/intent/tweet?text=I%20just%20joined%20the%20%24KAREN%20airdrop!%20%F0%9F%92%8E%20https%3A%2F%2Fkaren-world-clean.vercel.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 underline"
+          className="block text-center text-blue-400 underline mb-4"
         >
-          Tweet Now
+          ✨ Tweet Now
         </a>
-      </p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-  <input
-    type="text"
-    placeholder="Enter your Sui wallet address"
-    value={wallet}
-    onChange={(e) => setWallet(e.target.value)}
-    required
-    className="..."
-  />
-  <button
-    type="submit"
-    disabled={loading}
-    className="..."
-  >
-    🎁 Submit
-  </button>
-</form>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Enter your Sui wallet address"
+            value={wallet}
+            onChange={(e) => setWallet(e.target.value)}
+            required
+            className="w-full px-4 py-2 rounded-lg text-black font-semibold focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-2 rounded-lg font-bold transition ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-pink-600 hover:bg-pink-700"
+            }`}
+          >
+            {loading ? "Submitting..." : "🚀 Submit for Airdrop"}
+          </button>
+        </form>
 
-      {statusMessage && (
-        <p className="mt-4 text-center text-sm text-red-600">{statusMessage}</p>
-      )}
+        {statusMessage && (
+          <p className="mt-4 text-center text-sm text-yellow-300">{statusMessage}</p>
+        )}
 
-      <div className="mt-6 text-center text-sm text-gray-500">
-        Claimed: {airdropStatus.totalClaimed} / {airdropStatus.max} KAREN (
-        {airdropStatus.percent}%)
-        <br />
-        Remaining: {airdropStatus.remaining} KAREN
+        <div className="mt-6 text-center text-sm text-gray-300">
+          Claimed: {airdropStatus.totalClaimed} / {airdropStatus.max} KAREN ({airdropStatus.percent}%)
+          <br />
+          Remaining: {airdropStatus.remaining} KAREN
+        </div>
       </div>
     </div>
   );
