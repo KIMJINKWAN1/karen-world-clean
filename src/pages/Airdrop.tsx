@@ -13,9 +13,9 @@ export default function Airdrop() {
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
-  console.log("✅ Submit triggered");
   setLoading(true);
   setStatusMessage("");
+  console.log("✅ Submit Triggered!", wallet);  // ← 로그 찍기
 
   try {
     const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
@@ -23,14 +23,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ wallet }), // ← 여기가 핵심!
+      body: JSON.stringify({ wallet }),
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Submission failed");
-
+    if (!res.ok) throw new Error(data.error || "Submit failed");
     setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
-    console.log("✅ Success:", data);
   } catch (err: any) {
     console.error("❌ Submit error", err);
     setStatusMessage(`❌ ${err.message}`);
