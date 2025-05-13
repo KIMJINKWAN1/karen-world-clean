@@ -13,16 +13,13 @@ export default function Airdrop() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("✅ Submit Triggered!", wallet);
     setLoading(true);
     setStatusMessage("");
 
     try {
       const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ wallet }),
       });
 
@@ -38,11 +35,37 @@ export default function Airdrop() {
     }
   };
 
+  const checkStatus = async () => {
+    if (!wallet) {
+      setStatusMessage("❗ Please enter a wallet address.");
+      return;
+    }
+    setLoading(true);
+    setStatusMessage("");
+
+    try {
+      const res = await fetch(`https://karenworldbackend1.vercel.app/api/status?address=${wallet}`);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Status check failed");
+
+      if (data.claimed) {
+        setStatusMessage(`✅ You already claimed ${data.amount} $KAREN.`);
+      } else {
+        setStatusMessage("⛔ You haven't claimed yet.");
+      }
+    } catch (err: any) {
+      console.error("❌ Status check error", err);
+      setStatusMessage(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetch("https://karenworldbackend1.vercel.app/api/status")
       .then((res) => res.json())
       .then((data) => {
-        console.log("📊 Status API Data:", data);
         setAirdropStatus({
           totalClaimed: data.claimed,
           remaining: data.remaining,
@@ -83,6 +106,7 @@ export default function Airdrop() {
             required
             className="w-full px-4 py-2 rounded-lg text-black font-semibold focus:outline-none"
           />
+
           <button
             type="submit"
             disabled={loading}
@@ -91,6 +115,17 @@ export default function Airdrop() {
             }`}
           >
             {loading ? "Submitting..." : "🚀 Submit for Airdrop"}
+          </button>
+
+          <button
+            type="button"
+            onClick={checkStatus}
+            disabled={loading}
+            className={`w-full py-2 rounded-lg font-bold transition ${
+              loading ? "bg-gray-500 cursor-not-allowed" : "bg-yellow-600 hover:bg-yellow-700"
+            }`}
+          >
+            {loading ? "Checking..." : "🔍 Check Claim Status"}
           </button>
         </form>
 
