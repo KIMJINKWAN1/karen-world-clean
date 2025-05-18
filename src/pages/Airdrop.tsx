@@ -26,7 +26,7 @@ export default function Airdrop() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Submit failed");
 
-      setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
+      setStatusMessage(`🎉 You successfully claimed ${data.amount} $KAREN!`);
     } catch (err: any) {
       console.error("❌ Submit error", err);
       setStatusMessage(`❌ ${err.message}`);
@@ -37,7 +37,7 @@ export default function Airdrop() {
 
   const checkStatus = async () => {
     if (!wallet) {
-      setStatusMessage("❗ Please enter a wallet address.");
+      setStatusMessage("❗ Please enter your wallet address.");
       return;
     }
     setLoading(true);
@@ -50,7 +50,7 @@ export default function Airdrop() {
       if (!res.ok) throw new Error(data.error || "Status check failed");
 
       if (data.claimed) {
-        setStatusMessage(`✅ You already claimed ${data.amount} $KAREN.`);
+        setStatusMessage(`✅ This wallet already claimed ${data.amount} $KAREN.`);
       } else {
         setStatusMessage("⛔ You haven't claimed yet.");
       }
@@ -100,7 +100,7 @@ export default function Airdrop() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            placeholder="Enter your Sui wallet address"
+            placeholder="Enter your wallet address"
             value={wallet}
             onChange={(e) => setWallet(e.target.value)}
             required
