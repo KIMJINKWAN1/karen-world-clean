@@ -26,7 +26,7 @@ export default function Airdrop() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Submit failed");
 
-      setStatusMessage(`🎉 You successfully claimed ${data.amount} $KAREN!`);
+      setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
     } catch (err: any) {
       console.error("❌ Submit error", err);
       setStatusMessage(`❌ ${err.message}`);
@@ -100,7 +100,7 @@ export default function Airdrop() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            placeholder="Enter your wallet address"
+            placeholder="0x..."
             value={wallet}
             onChange={(e) => setWallet(e.target.value)}
             required
@@ -133,11 +133,14 @@ export default function Airdrop() {
           <p className="mt-4 text-center text-sm text-yellow-300">{statusMessage}</p>
         )}
 
-        <div className="mt-6 text-center text-sm text-gray-300">
-          Claimed: {airdropStatus.totalClaimed} / {airdropStatus.max} KAREN ({airdropStatus.percent}%)
-          <br />
-          Remaining: {airdropStatus.remaining} KAREN
-        </div>
+        {/* ✅ 최소 수정: 수령 정보 출력 */}
+        {airdropStatus.max > 0 && (
+          <div className="mt-6 text-center text-sm text-gray-300">
+            Claimed: {airdropStatus.totalClaimed.toLocaleString()} / {airdropStatus.max.toLocaleString()} KAREN ({airdropStatus.percent}%)
+            <br />
+            Remaining: {airdropStatus.remaining.toLocaleString()} KAREN
+          </div>
+        )}
       </div>
     </div>
   );
