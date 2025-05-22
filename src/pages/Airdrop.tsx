@@ -16,6 +16,13 @@ export default function Airdrop() {
     setLoading(true);
     setStatusMessage("");
 
+    // ✅ [추가]
+if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
+  setStatusMessage("❗ Invalid wallet address format.");
+  setLoading(false);
+  return;
+}
+
     try {
       const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
         method: "POST",
@@ -27,6 +34,10 @@ export default function Airdrop() {
       if (!res.ok) throw new Error(data.error || "Submit failed");
 
       setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
+
+      // ✅ [추가]
+setWallet("");
+
     } catch (err: any) {
       console.error("❌ Submit error", err);
       setStatusMessage(`❌ ${err.message}`);
@@ -40,6 +51,12 @@ export default function Airdrop() {
       setStatusMessage("❗ Please enter your wallet address.");
       return;
     }
+
+    // ✅ [추가]
+if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
+  setStatusMessage("❗ Invalid wallet address format.");
+  return;
+}
     setLoading(true);
     setStatusMessage("");
 
