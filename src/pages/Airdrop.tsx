@@ -24,11 +24,11 @@ if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
 }
 
     try {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ wallet }),
-  });
+ const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ wallet }),
+});
 
   let data: any = {};
   try {
@@ -68,7 +68,7 @@ if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
     setStatusMessage("");
 
     try {
-      const res = await fetch(`https://karenworldbackend1.vercel.app/api/status?address=${wallet}`);
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, ...)
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Status check failed");
