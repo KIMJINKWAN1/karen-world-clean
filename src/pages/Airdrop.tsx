@@ -16,41 +16,38 @@ export default function Airdrop() {
     setLoading(true);
     setStatusMessage("");
 
-    // ✅ [추가]
-if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
-  setStatusMessage("❗ Invalid wallet address format.");
-  setLoading(false);
-  return;
-}
+    if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
+      setStatusMessage("❗ Invalid wallet address format.");
+      setLoading(false);
+      return;
+    }
 
     try {
- const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ wallet }),
-});
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wallet }),
+      });
 
-  let data: any = {};
-  try {
-    data = await res.json();
-  } catch (err) {
-    throw new Error("❌ Invalid JSON response from server.");
-  }
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch (err) {
+        throw new Error("❌ Invalid JSON response from server.");
+      }
 
-  if (!res.ok) {
-    throw new Error(data?.error || "❌ Submit failed");
-  }
+      if (!res.ok) {
+        throw new Error(data?.error || "❌ Submit failed");
+      }
 
-  setStatusMessage(`✅ Claimed ${data.amount ?? "some"} $KAREN!`);
-  setWallet("");
-
-} catch (err: any) {
-  console.error("❌ Submit error:", err);
-  setStatusMessage(`❌ ${err.message}`);
-} finally {
-  setLoading(false);
-}
-
+      setStatusMessage(`✅ Claimed ${data.amount ?? "some"} $KAREN!`);
+      setWallet("");
+    } catch (err: any) {
+      console.error("❌ Submit error:", err);
+      setStatusMessage(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const checkStatus = async () => {
@@ -59,16 +56,16 @@ if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
       return;
     }
 
-    // ✅ [추가]
-if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
-  setStatusMessage("❗ Invalid wallet address format.");
-  return;
-}
+    if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
+      setStatusMessage("❗ Invalid wallet address format.");
+      return;
+    }
+
     setLoading(true);
     setStatusMessage("");
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, ...)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/status?address=${wallet}`);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Status check failed");
@@ -157,7 +154,6 @@ if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
           <p className="mt-4 text-center text-sm text-yellow-300">{statusMessage}</p>
         )}
 
-        {/* ✅ 최소 수정: 수령 정보 출력 */}
         {airdropStatus.max > 0 && (
           <div className="mt-6 text-center text-sm text-gray-300">
             Claimed: {airdropStatus.totalClaimed.toLocaleString()} / {airdropStatus.max.toLocaleString()} KAREN ({airdropStatus.percent}%)
