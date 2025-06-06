@@ -22,32 +22,32 @@ export default function Airdrop() {
       return;
     }
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wallet }),
-      });
+   try {
+  const res = await fetch(`/api/submit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ wallet }),
+  });
 
-      let data: any = {};
-      try {
-        data = await res.json();
-      } catch (err) {
-        throw new Error("❌ Invalid JSON response from server.");
-      }
+  let data: any = {};
+  try {
+    data = await res.json();
+  } catch (err) {
+    throw new Error("❌ Invalid JSON response from server.");
+  }
 
-      if (!res.ok) {
-        throw new Error(data?.error || "❌ Submit failed");
-      }
+  if (!res.ok) {
+    throw new Error(data?.error || "❌ Submit failed");
+  }
 
-      setStatusMessage(`✅ Claimed ${data.amount ?? "some"} $KAREN!`);
-      setWallet("");
-    } catch (err: any) {
-      console.error("❌ Submit error:", err);
-      setStatusMessage(`❌ ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+  setStatusMessage(`✅ Claimed ${data.amount ?? "some"} $KAREN!`);
+  setWallet("");
+} catch (err: any) {
+  console.error("❌ Submit error:", err);
+  setStatusMessage(`❌ ${err.message}`);
+} finally {
+  setLoading(false);
+}
   };
 
   const checkStatus = async () => {
