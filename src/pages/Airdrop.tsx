@@ -24,16 +24,16 @@ if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
 }
 
     try {
-      const res = await fetch("https://karenworldbackend1.vercel.app/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wallet }),
-      });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ wallet }),
+});
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Submit failed");
 
-      setStatusMessage(`🎉 Claimed ${data.amount} $KAREN!`);
+      setStatusMessage(`🎉 Claimed ${data.amount ?? 'some'} $KAREN!`);
 
       // ✅ [추가]
 setWallet("");
