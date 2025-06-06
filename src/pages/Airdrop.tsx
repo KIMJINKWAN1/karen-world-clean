@@ -24,26 +24,33 @@ if (!/^0x[a-fA-F0-9]{40,64}$/.test(wallet)) {
 }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ wallet }),
-});
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/submit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ wallet }),
+  });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Submit failed");
+  let data: any = {};
+  try {
+    data = await res.json();
+  } catch (err) {
+    throw new Error("❌ Invalid JSON response from server.");
+  }
 
-      setStatusMessage(`🎉 Claimed ${data.amount ?? 'some'} $KAREN!`);
+  if (!res.ok) {
+    throw new Error(data?.error || "❌ Submit failed");
+  }
 
-      // ✅ [추가]
-setWallet("");
+  setStatusMessage(`✅ Claimed ${data.amount ?? "some"} $KAREN!`);
+  setWallet("");
 
-    } catch (err: any) {
-      console.error("❌ Submit error", err);
-      setStatusMessage(`❌ ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+} catch (err: any) {
+  console.error("❌ Submit error:", err);
+  setStatusMessage(`❌ ${err.message}`);
+} finally {
+  setLoading(false);
+}
+
   };
 
   const checkStatus = async () => {
