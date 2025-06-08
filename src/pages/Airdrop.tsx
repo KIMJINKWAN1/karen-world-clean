@@ -84,18 +84,21 @@ export default function Airdrop() {
   };
 
   useEffect(() => {
-    fetch("/api/status")
-      .then((res) => res.json())
-      .then((data) => {
-        setAirdropStatus({
-          totalClaimed: data.claimed,
-          remaining: data.remaining,
-          max: data.total,
-          percent: data.percent,
-        });
-      })
-      .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
-  }, []);
+  fetch("/api/status")
+    .then((res) => {
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    })
+    .then((data) => {
+      setAirdropStatus({
+        totalClaimed: data.claimed,
+        remaining: data.remaining,
+        max: data.total,
+        percent: data.percent,
+      });
+    })
+    .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
+}, []);
 
   return (
     <div
@@ -165,6 +168,7 @@ export default function Airdrop() {
     </div>
   );
 }
+
 
 
 
