@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const BASE_URL = "https://karenworld-backend-900624s-projects.vercel.app"; // ✅ 직접 설정
+
 export default function Airdrop() {
   const [wallet, setWallet] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
@@ -23,7 +25,7 @@ export default function Airdrop() {
     }
 
     try {
-      const res = await fetch(`/api/submit`, {
+      const res = await fetch(`${BASE_URL}/api/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ wallet }),
@@ -65,7 +67,7 @@ export default function Airdrop() {
     setStatusMessage("");
 
     try {
-      const res = await fetch(`/api/status?address=${wallet}`);
+      const res = await fetch(`${BASE_URL}/api/status?address=${wallet}`);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Status check failed");
@@ -84,21 +86,21 @@ export default function Airdrop() {
   };
 
   useEffect(() => {
-  fetch("/api/status")
-    .then((res) => {
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
-    })
-    .then((data) => {
-      setAirdropStatus({
-        totalClaimed: data.claimed,
-        remaining: data.remaining,
-        max: data.total,
-        percent: data.percent,
-      });
-    })
-    .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
-}, []);
+    fetch(`${BASE_URL}/api/status`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
+      .then((data) => {
+        setAirdropStatus({
+          totalClaimed: data.claimed,
+          remaining: data.remaining,
+          max: data.total,
+          percent: data.percent,
+        });
+      })
+      .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
+  }, []);
 
   return (
     <div
@@ -168,6 +170,8 @@ export default function Airdrop() {
     </div>
   );
 }
+
+
 
 
 
