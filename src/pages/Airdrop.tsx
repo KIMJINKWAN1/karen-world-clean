@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const BASE_URL = "https://karenworld-backend-900624s-projects.vercel.app"; // ✅ 직접 설정
+const BASE_URL = "https://karenworldbackend1.vercel.app";
 
 export default function Airdrop() {
   const [wallet, setWallet] = useState("");
