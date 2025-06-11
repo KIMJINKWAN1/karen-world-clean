@@ -99,14 +99,19 @@ export default function Airdrop() {
       return res.json();
     })
     .then((data) => {
-      if (data?.success) {
+      if (data?.claimed !== undefined) {
+        const percent =
+          typeof data.percent === "number"
+            ? data.percent.toFixed(2)
+            : Number(data.percent).toFixed(2);
+
         setAirdropStatus({
-  claimedCount: data.claimed,            // ✅ 지갑 수
-  totalClaimed: data.claimed * 2000,     // ✅ 총 수령 토큰 수량
-  remaining: data.remaining,
-  max: data.total,
-  percent: data.percent.toFixed(2),
-});
+          claimedCount: data.claimed,            // ✅ 지갑 수
+          totalClaimed: data.claimed * 2000,     // ✅ 총 수령 토큰 수량
+          remaining: data.remaining,
+          max: data.total,
+          percent,
+        });
       }
     })
     .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
