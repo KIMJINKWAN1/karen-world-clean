@@ -18,7 +18,7 @@ export default function Airdrop() {
   remaining: 0,
   max: 0,
   percent: "0.00",
-});;
+});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ export default function Airdrop() {
       const res = await fetch(`${BASE_URL}/api/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wallet }),
+        body: JSON.stringify({ wallet }), 
       });
 
       let data: any = {};
@@ -99,18 +99,13 @@ export default function Airdrop() {
       return res.json();
     })
     .then((data) => {
-      if (data?.claimed !== undefined) {
-        const percent =
-          typeof data.percent === "number"
-            ? data.percent.toFixed(2)
-            : Number(data.percent).toFixed(2);
-
+      if (data?.success) {
         setAirdropStatus({
-          claimedCount: data.claimed,            // ✅ 지갑 수
-          totalClaimed: data.claimed * 2000,     // ✅ 총 수령 토큰 수량
+          claimedCount: data.claimedCount,                  // ✅ 추가됨
+          totalClaimed: data.totalClaimed,
           remaining: data.remaining,
           max: data.total,
-          percent,
+          percent: Number(data.percent).toFixed(2),
         });
       }
     })
@@ -176,10 +171,12 @@ export default function Airdrop() {
 
         {airdropStatus.max > 0 && (
           <div className="mt-6 text-center text-sm text-gray-300">
-            Claimed: {airdropStatus.totalClaimed.toLocaleString()} / {airdropStatus.max.toLocaleString()} KAREN ({airdropStatus.percent}%)
-            <br />
-            Remaining: {airdropStatus.remaining.toLocaleString()} KAREN
-          </div>
+  Claimed: {airdropStatus.totalClaimed.toLocaleString()} / {airdropStatus.max.toLocaleString()} KAREN ({airdropStatus.percent}%)
+  <br />
+  Claimed wallets: {airdropStatus.claimedCount.toLocaleString()}
+  <br />
+  Remaining: {airdropStatus.remaining.toLocaleString()} KAREN
+</div>
         )}
       </div>
     </div>
