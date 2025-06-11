@@ -1,48 +1,66 @@
-import { useState } from "react";
+// src/pages/test.tsx
+
+import { useState } from 'react';
 
 export default function AirdropTestPage() {
-  const [address, setAddress] = useState("");
-  const [result, setResult] = useState("");
+  const [address, setAddress] = useState('');
+  const [result, setResult] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleAirdrop = async () => {
+    setLoading(true);
+    setResult(null);
     try {
-      const res = await fetch("/api/airdrop", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/airdrop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ address }),
       });
 
-      const text = await res.text(); // JSON이 아닐 경우 대비
-      try {
-        const json = JSON.parse(text);
-        setResult(JSON.stringify(json, null, 2));
-      } catch (e) {
-        setResult(text); // HTML 에러 페이지 등
-      }
-    } catch (err) {
-      setResult("❌ 요청 실패: " + err);
+      const data = await res.json();
+      setResult(JSON.stringify(data, null, 2));
+    } catch (err: any) {
+      setResult(`❌ Error: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <main className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Airdrop API 테스트</h1>
+    <div style={{ padding: 32, fontFamily: 'sans-serif' }}>
+      <h1>🪂 Airdrop API Test</h1>
       <input
+        style={{ width: 400, padding: 8, fontSize: 16 }}
         type="text"
-        placeholder="0x 지갑 주소 입력"
+        placeholder="Sui wallet address"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
-        className="border border-gray-300 p-2 w-full rounded mb-4"
       />
+      <br />
       <button
+        style={{ marginTop: 16, padding: '8px 16px', fontSize: 16 }}
         onClick={handleAirdrop}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        disabled={loading}
       >
-        에어드랍 요청
+        {loading ? 'Sending...' : 'Submit to /api/airdrop'}
       </button>
-      <pre className="mt-6 bg-gray-100 p-4 rounded text-sm whitespace-pre-wrap">
-        {result}
-      </pre>
-    </main>
+      {result && (
+        <pre
+          style={{
+            marginTop: 24,
+            background: '#eee',
+            padding: 16,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            maxWidth: 600,
+          }}
+        >
+          {result}
+        </pre>
+      )}
+    </div>
   );
 }
+
