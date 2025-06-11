@@ -1,5 +1,3 @@
-// pages/test.tsx
-
 import { useState } from "react";
 
 export default function AirdropTestPage() {
