@@ -6,12 +6,19 @@ export default function Airdrop() {
   const [wallet, setWallet] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [airdropStatus, setAirdropStatus] = useState({
-    totalClaimed: 0,
-    remaining: 0,
-    max: 0,
-    percent: "0.00",
-  });
+  const [airdropStatus, setAirdropStatus] = useState<{
+  claimedCount: number;
+  totalClaimed: number;
+  remaining: number;
+  max: number;
+  percent: string;
+}>({
+  claimedCount: 0,
+  totalClaimed: 0,
+  remaining: 0,
+  max: 0,
+  percent: "0.00",
+});;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,21 +93,24 @@ export default function Airdrop() {
   };
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/status`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
-        return res.json();
-      })
-      .then((data) => {
+  fetch(`${BASE_URL}/api/status`)
+    .then((res) => {
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    })
+    .then((data) => {
+      if (data?.success) {
         setAirdropStatus({
-          totalClaimed: data.claimed,
-          remaining: data.remaining,
-          max: data.total,
-          percent: data.percent,
-        });
-      })
-      .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
-  }, []);
+  claimedCount: data.claimed,            // ✅ 지갑 수
+  totalClaimed: data.claimed * 2000,     // ✅ 총 수령 토큰 수량
+  remaining: data.remaining,
+  max: data.total,
+  percent: data.percent.toFixed(2),
+});
+      }
+    })
+    .catch((err) => console.error("❌ Failed to fetch airdrop status", err));
+}, []);
 
   return (
     <div
